@@ -1,7 +1,7 @@
 FROM node:16-slim as node-builder
 
 COPY . ./app
-RUN cd /app && npm i && npm run prod
+RUN cd /app && npm i && npm run build
 
 
 FROM php:8.1.5-apache
