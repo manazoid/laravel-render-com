@@ -19,11 +19,21 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
+RUN sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+
 COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 COPY . ./
 COPY --from=node-builder /app/public ./public
 RUN composer install
-RUN chown -Rf www-data:www-data ./
 
+#RUN chown -Rf www-data:www-data ./
+RUN chgrp -R www-data /var/www
+RUN find /var/www -type d -exec chmod 775 {} +
+RUN find /var/www -type f -exec chmod 664 {} +
+
+EXPOSE 80
+
+# start Apache2 on image start
+CMD ["/usr/sbin/apache2ctl","-DFOREGROUND"]
