@@ -36,4 +36,5 @@ RUN find /var/www -type f -exec chmod 664 {} +
 EXPOSE 80
 
 # start Apache2 on image start
-CMD ["/usr/sbin/apache2ctl","-DFOREGROUND"]
+#CMD ["/usr/sbin/apache2ctl","-DFOREGROUND"]
+CMD ["/usr/local/bin/apache2-foreground"]
